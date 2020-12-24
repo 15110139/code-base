@@ -65,11 +65,50 @@ export class Environments {
 	@IsNumber()
 	public LIMIT_POST_NORMAL: number = 7 * 24 * 60 * 60;
 
-
 	@Expose()
 	@Type(() => String)
 	@IsString()
 	public JWT_SECRET: string = "JWT_SECRET";
+
+	@Expose()
+	@IsString()
+	@Type(() => String)
+	public MQ_HOST: string = "localhost";
+
+	@Expose()
+	@IsString()
+	@Type(() => String)
+	public MQ_USER: string = "admin";
+
+	@Expose()
+	@IsString()
+	@Type(() => String)
+	public MQ_PASSWORD: string = "admin";
+
+	@Expose()
+	@IsNumber()
+	@Type(() => Number)
+	public MQ_PORT: number = 5672;
+
+	@Expose()
+	@Type(() => String)
+	@IsString()
+	public REDIS_HOST: string = "localhost";
+
+	@Expose()
+	@IsNumber()
+	@Type(() => Number)
+	public REDIS_PORT: number = 6379;
+
+	@Expose()
+	@Type(() => String)
+	@IsString()
+	public REDIS_USER: string = "admin";
+
+	@Expose()
+	@IsString()
+	@Type(() => String)
+	public REDIS_PASSWORD: string = "admin";
 }
 
 @Injectable()

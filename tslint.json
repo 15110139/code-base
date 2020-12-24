@@ -1,0 +1,37 @@
+{
+	"extends": ["tslint:latest"],
+	"defaultSeverity": "error",
+	"rules": {
+		"no-implicit-dependencies": false,
+		"ordered-imports": false,
+		"no-console": true,
+		"semicolon": false,
+		"member-ordering": false,
+		"no-submodule-imports": [true, "@nestjs", "@internal", "@pm2", "rxjs"],
+		"no-this-assignment": [
+			true,
+			{
+				"allow-destructuring": true
+			}
+		],
+		"object-literal-sort-keys": false,
+		"typedef": [
+			true,
+			"call-signature",
+			"arrow-call-signature",
+			"property-declaration"
+		],
+		"no-unused-expression": [true, "allow-fast-null-checks"],
+		"ban": [
+			true,
+			{
+				"name": ["Object", "assign"],
+				"message": "Not typesafe, use copyFields utils instead"
+			}
+		],
+		"indent": [true, "tabs"],
+		"max-classes-per-file": [false],
+		"variable-name": false,
+		"no-any": [true, { "ignore-rest-args": true }]
+	}
+}

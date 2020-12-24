@@ -5,7 +5,7 @@ import { PostItem } from "./post.model";
 export class GetPostParam {
 	@Expose()
 	@IsString()
-	post_id: string;
+	post_id!: string;
 }
 
 export class GetPostResponse extends PostItem {}

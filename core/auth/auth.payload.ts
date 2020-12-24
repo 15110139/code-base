@@ -5,5 +5,5 @@ import { JWTPayload } from "./auth.model";
 export class UserTokenRequest {
 	@Expose()
 	@Type(() => JWTPayload)
-	user: JWTPayload;
+	user!: JWTPayload;
 }

@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
+import { classToPlain } from "class-transformer";
 import { EnvironmentsService } from "../environment/environment.service";
 import { JWTPayload } from "./auth.model";
 
@@ -21,7 +22,7 @@ export class AuthService {
 		content: JWTPayload,
 		expire: number,
 	): Promise<string> {
-		return this.jwtService.sign(content, {
+		return this.jwtService.sign(classToPlain(content), {
 			audience: this.envService.ENVIRONMENTS.JWT_ISSUER,
 			subject: this.envService.ENVIRONMENTS.JWT_ISSUER,
 			issuer: this.envService.ENVIRONMENTS.JWT_ISSUER,

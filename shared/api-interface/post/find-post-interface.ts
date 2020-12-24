@@ -2,7 +2,6 @@ import { Exclude, Expose, Type } from "class-transformer";
 import {
 	IsBoolean,
 	IsDate,
-	IsNumber,
 	IsOptional,
 	IsString,
 } from "class-validator";

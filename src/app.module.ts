@@ -5,6 +5,10 @@ import { UserAuthModule } from "./module/user-auth/user-auth.module";
 import { UserModule } from "./module/user/user.module";
 import { EnvironmentsModule } from "@internal/core/environment/environment.module";
 import { typeormModule } from "@internal/database/typeorm.module";
+import { SqlModule } from "@internal/core/sql/sql.module";
+import { APP_GUARD, APP_INTERCEPTOR } from "@nestjs/core";
+import { JwtGuardPublic } from "@internal/core/auth/auth.guard";
+import { ResponseApiInterceptor } from "@internal/core/interceptor/response.interceptor";
 
 @Module({
 	imports: [
@@ -13,7 +17,18 @@ import { typeormModule } from "@internal/database/typeorm.module";
 		AuthModule,
 		EnvironmentsModule,
 		UserAuthModule,
+		SqlModule,
 		typeormModule(),
+	],
+	providers: [
+		{
+			provide: APP_GUARD,
+			useClass: JwtGuardPublic,
+		},
+		{
+			provide: APP_INTERCEPTOR,
+			useClass: ResponseApiInterceptor,
+		},
 	],
 })
 export class AppModule {}

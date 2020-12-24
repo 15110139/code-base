@@ -13,7 +13,13 @@ import {
 import { SYSTEM_CODE } from "@internal/shared/business/system-code";
 import { AuthService } from "@internal/core/auth/auth.service";
 import { UserService } from "../user/user.service";
-import { JWTPayload } from "@internal/core/auth/auth.model";
+import { UserJWTPayload } from "@internal/core/auth/auth.model";
+import { Public } from "@internal/core/auth/auth.decorator";
+import { TOKEN_TYPE } from "@internal/shared/business/jwt.model";
+import {
+	PERMISSION,
+	SYSTEM_ROLE,
+} from "@internal/shared/business/role-permission";
 
 @Controller()
 export class UserAuthController {
@@ -22,6 +28,7 @@ export class UserAuthController {
 		private userService: UserService,
 	) {}
 
+	@Public()
 	@Post(UserSignInURL)
 	public async userLogin(
 		@Body() body: UserLoginBodyRequest,
@@ -30,18 +37,29 @@ export class UserAuthController {
 			body.email,
 			body.password,
 		);
-
-		const content: JWTPayload = {
-			time: new Date().getTime(),
-			type: user.user_type,
-			user_id: user.id,
-		};
-
+		const content = new UserJWTPayload(user.id, user.user_type);
+		content.time = new Date().getTime();
+		content.privilege =
+			user.user_type === TOKEN_TYPE.PRO
+				? {
+						permission: [
+							PERMISSION.CREATE,
+							PERMISSION.DELETE,
+							PERMISSION.EDIT,
+							PERMISSION.GET,
+						],
+						role: SYSTEM_ROLE.ADMIN,
+				  }
+				: {
+						permission: [PERMISSION.GET],
+						role: SYSTEM_ROLE.USER,
+				  };
 		return {
 			token: await this.authService.signJWTToken(content),
 		};
 	}
 
+	@Public()
 	@Post(UserSignUpURL)
 	public async userSign(
 		@Body() body: UserSignInBodyRequest,

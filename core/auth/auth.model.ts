@@ -1,4 +1,7 @@
 import { TOKEN_TYPE } from "@internal/shared/business/jwt.model";
+import { IRequirePrivilege } from "@internal/shared/business/role-permission";
+import { Exclude, Expose } from "class-transformer";
+import { IsString, ValidateNested } from "class-validator";
 
 export class JWTPayload {
 	public readonly type!: TOKEN_TYPE;
@@ -21,4 +24,19 @@ export class JWTPayload {
 		this.user_id = userId;
 		this.type = type;
 	}
+}
+
+@Exclude()
+export class UserJWTPayload extends JWTPayload {
+	@IsString()
+	@Expose()
+	public user_id!: string;
+
+	@IsString()
+	@Expose()
+	public username!: string;
+
+	@Expose()
+	@ValidateNested({ each: true })
+	public privilege!: IRequirePrivilege;
 }

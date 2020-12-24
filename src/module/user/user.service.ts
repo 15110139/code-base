@@ -13,7 +13,14 @@ export class UserService {
 		email: string,
 		password: string,
 	): Promise<UserEntity> {
-		return {} as UserEntity;
+		const user = await this.userRepo.get({
+			email,
+			password,
+		});
+		if (!user) {
+			throw new BadRequestException(SYSTEM_CODE.USER_NOT_FOUND);
+		}
+		return user;
 	}
 
 	public async createUser(email: string, password: string, type: TOKEN_TYPE) {
