@@ -2,7 +2,7 @@ import { PostEntity } from "@internal/database/entities/post.entity";
 import { StreetEntity } from "@internal/database/entities/street.entity";
 import { ListPostQuery } from "@internal/shared/api-interface/post/find-post-interface";
 import { TOKEN_TYPE } from "@internal/shared/business/jwt.model";
-import { BadRequestException, Injectable, Logger } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { Repository } from "typeorm";
 import * as uuid from "uuid";
 import { HouseEntity } from "@internal/database/entities/house.entity";
@@ -12,14 +12,15 @@ import { CreateHouseQuerySQL, CreateStreetQuerySQL } from "../repository";
 import { HandlerFunction } from "@internal/core/base-service/base-service.decorator";
 import { BaseFunction } from "@internal/core/base-function-info/base-function-info.model";
 import { SYSTEM_CODE } from "@internal/shared/business/system-code";
+import { CreateUserCaseService } from "./create-poist.usercase";
 
 @Injectable()
 export class CreateHouseAndStreet extends BaseApplication {
-	private logger = new Logger(this.constructor.name)
 	constructor(
 		@InjectRepository(PostEntity)
 		private streetRepository: Repository<StreetEntity>,
 		@InjectRepository(HouseEntity) private houseRe: Repository<HouseEntity>,
+		private createUserCaseService: CreateUserCaseService,
 	) {
 		super();
 	}
@@ -27,13 +28,20 @@ export class CreateHouseAndStreet extends BaseApplication {
 	@HandlerFunction()
 	public async execute(
 		identity: BaseFunction,
-		_userType: TOKEN_TYPE,
-		_paging: {
-			page: number;
-			pageSize: number;
+		data: {
+			_userType: TOKEN_TYPE;
+			_paging: {
+				page: number;
+				pageSize: number;
+				_query: ListPostQuery;
+			};
 		},
-		_query: ListPostQuery,
+		metaData: {
+			traceId: string;
+		},
 	) {
+		
+		this.logger.log(JSON.stringify(data, null, 0));
 		await this.sqlBase.startTransaction(identity);
 		const newStreet = new StreetEntity();
 		newStreet.name = "Le Qunag Dinh";
@@ -46,7 +54,7 @@ export class CreateHouseAndStreet extends BaseApplication {
 			),
 		);
 		if (Math.floor(Math.random() * 10 + 1) % 2 == 0) {
-			this.logger.error("Generate error random")
+			this.logger.error("Generate error random");
 			throw new BadRequestException(SYSTEM_CODE.BAD_REQUEST);
 		}
 		const newHouse = new HouseEntity();
@@ -58,14 +66,19 @@ export class CreateHouseAndStreet extends BaseApplication {
 			new CreateHouseQuerySQL(identity, newHouse, this.houseRe),
 		);
 
-		// const people = await this.createPeopleServicer.execute(
-		// 	identity,
-		// 	house.house_id,
-		// );
-		await this.sqlBase.commitTransaction(identity);
-		// console.log(people);
-		console.log(house);
+		const people = await this.createUserCaseService.execute(
+			identity,
+			{
+				houseId: house.house_id,
+			},
+			{
+				traceId: metaData.traceId,
+			},
+		);
 
+		await this.sqlBase.commitTransaction(identity);
+		this.logger.log(JSON.stringify(people, null, 0));
+		this.logger.log(JSON.stringify(house, null, 0));
 		return null;
 	}
 

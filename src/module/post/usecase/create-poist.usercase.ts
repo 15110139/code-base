@@ -16,18 +16,20 @@ export class CreateUserCaseService extends BaseApplication {
 	@HandlerFunction()
 	public async execute(
 		identity: BaseFunction,
-		houseId: string,
+		data: { houseId: string },
+		_metaData: {
+			traceId: string;
+		},
 	): Promise<PeopleEntity> {
 		await this.sqlBase.startTransaction(identity);
-
 		const newPeople = new PeopleEntity();
 		newPeople.name = "Tien";
-		newPeople.house_id = houseId;
+		newPeople.house_id = data.houseId;
 
 		const people = await this.sqlBase.executeQuery<PeopleEntity>(
 			new CreatePeopleQuerySQL(identity, newPeople, this.peopleRepo),
 		);
-
+		this.logger.log(JSON.stringify(newPeople));
 		await this.sqlBase.commitTransaction(identity);
 		return people;
 	}

@@ -1,5 +1,5 @@
 import { JWTPayload } from "@internal/core/auth/auth.model";
-import { Controller, Get, Query, UseGuards } from "@nestjs/common";
+import { Controller, Get, Headers, Query, UseGuards } from "@nestjs/common";
 import {
 	ListPostQuery,
 	ListPostURL,
@@ -17,6 +17,7 @@ import {
 	SYSTEM_ROLE,
 } from "@internal/shared/business/role-permission";
 import { RootBaseFunction } from "@internal/core/base-function-info/base-function-info.model";
+import * as uuid from "uuid";
 @Controller()
 @UseGuards(AuthGuard())
 export class PostController {
@@ -34,15 +35,21 @@ export class PostController {
 	public async listPost(
 		@Query() query: ListPostQuery,
 		@JWTContent(JWTPayload) _jwtPayload: JWTPayload,
+		@Headers("x-trace-id") traceId: string,
 	) {
 		return await this.createHouseAndStreet.execute(
 			new RootBaseFunction(),
-			TOKEN_TYPE.NORMAL,
 			{
-				page: query?.page || 1,
-				pageSize: query?.pageSize || 10,
+				_userType: TOKEN_TYPE.NORMAL,
+				_paging: {
+					page: query?.page || 1,
+					pageSize: query?.pageSize || 10,
+					_query: query,
+				},
 			},
-			query,
+			{
+				traceId: traceId || uuid.v4(),
+			},
 		);
 	}
 }
