@@ -41,7 +41,7 @@ export class CreateHouseAndStreet extends BaseApplication {
 		},
 	) {
 		
-		this.logger.log(JSON.stringify(data, null, 0));
+		this.logger.info(JSON.stringify(data, null, 0));
 		await this.sqlBase.startTransaction(identity);
 		const newStreet = new StreetEntity();
 		newStreet.name = "Le Qunag Dinh";
@@ -77,8 +77,8 @@ export class CreateHouseAndStreet extends BaseApplication {
 		);
 
 		await this.sqlBase.commitTransaction(identity);
-		this.logger.log(JSON.stringify(people, null, 0));
-		this.logger.log(JSON.stringify(house, null, 0));
+		this.logger.info(JSON.stringify(people, null, 0));
+		this.logger.info(JSON.stringify(house, null, 0));
 		return null;
 	}
 

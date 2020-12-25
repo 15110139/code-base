@@ -1,6 +1,5 @@
 import {
 	Injectable,
-	Logger,
 	OnModuleDestroy,
 	OnModuleInit,
 	InternalServerErrorException,
@@ -8,11 +7,12 @@ import {
 
 import { connect, Connection, Options } from "amqplib";
 import { EnvironmentsService } from "@internal/core/environment/environment.service";
+import { LoggerService } from "../base-service/logger.service";
 
 @Injectable()
 export class MqService implements OnModuleInit, OnModuleDestroy {
 	private client!: Connection;
-	public logger = new Logger(MqService.name);
+	public logger = new LoggerService().setContext(this.constructor.name);
 
 	constructor(private envService: EnvironmentsService) {}
 	public getConnection(): Connection {

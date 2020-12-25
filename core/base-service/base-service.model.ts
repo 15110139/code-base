@@ -11,5 +11,5 @@ export abstract class BaseApplication extends BaseFunction {
 		},
 	): Promise<any>;
 	protected sqlBase = SqlBase.getInstance();
-	logger = new LoggerService(this.constructor.name);
+	logger = new LoggerService();
 }

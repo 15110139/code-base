@@ -1,5 +1,5 @@
 import { SYSTEM_CODE } from "@internal/shared/business/system-code";
-import { CONNECTION_NAME } from "@internal/shared/definition/connection-database";
+import { CONNECTION_NAME } from "@internal/shared/constant/connection-database";
 import {
 	Injectable,
 	InternalServerErrorException,

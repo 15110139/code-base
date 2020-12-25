@@ -23,18 +23,17 @@ export const pino = Pino({
 	},
 });
 export class LoggerService implements LoggerService {
-	constructor(private context: string) {
-		this.context = context;
-	}
+	private context!: string;
 	public setTraceId(id: string) {
-		return this.setContext(this.context + " - " + id);
+		this.setContext(this.context + " - " + id);
 	}
-	private setContext(text: string) {
+	public setContext(text: string) {
 		this.context = text;
+		return this;
 	}
 
-	public log(message: any): void {
-		pino.log(this.context + ": " + message);
+	public debug(message: any): void {
+		pino.debug(this.context + ": " + message);
 	}
 
 	public info(message: any): void {
@@ -48,5 +47,9 @@ export class LoggerService implements LoggerService {
 
 	public warn(message: any): void {
 		pino.warn(this.context + message);
+	}
+
+	public log(message: any): void {
+		pino.info(this.context + ": " + message);
 	}
 }

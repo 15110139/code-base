@@ -18,6 +18,7 @@ import {
 } from "@internal/shared/business/role-permission";
 import { RootBaseFunction } from "@internal/core/base-function-info/base-function-info.model";
 import * as uuid from "uuid";
+import { HEADER } from "@internal/shared/constant/http.constant";
 @Controller()
 @UseGuards(AuthGuard())
 export class PostController {
@@ -35,7 +36,7 @@ export class PostController {
 	public async listPost(
 		@Query() query: ListPostQuery,
 		@JWTContent(JWTPayload) _jwtPayload: JWTPayload,
-		@Headers("x-trace-id") traceId: string,
+		@Headers(HEADER.TRACE_ID) traceId: string,
 	) {
 		return await this.createHouseAndStreet.execute(
 			new RootBaseFunction(),

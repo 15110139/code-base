@@ -29,7 +29,7 @@ export class CreateUserCaseService extends BaseApplication {
 		const people = await this.sqlBase.executeQuery<PeopleEntity>(
 			new CreatePeopleQuerySQL(identity, newPeople, this.peopleRepo),
 		);
-		this.logger.log(JSON.stringify(newPeople));
+		this.logger.info(JSON.stringify(newPeople));
 		await this.sqlBase.commitTransaction(identity);
 		return people;
 	}

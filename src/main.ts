@@ -20,7 +20,7 @@ moduleAlias.addAlias(
 async function bootstrap() {
 	const app = await NestFactory.create<NestExpressApplication>(AppModule, {
 		bodyParser: true,
-		logger: new LoggerService("bootstrap"),
+		logger: new LoggerService().setContext("system"),
 	});
 	app.setGlobalPrefix(EnvironmentsProvider.useValue.ENVIRONMENTS.API_PREFIX);
 	app.useGlobalPipes(
@@ -38,9 +38,11 @@ async function bootstrap() {
 	);
 	await app.listen(EnvironmentsProvider.useValue.ENVIRONMENTS.API_PORT);
 	await app.init();
-	new LoggerService("bootstrap").error(
-		`App start port ${EnvironmentsProvider.useValue.ENVIRONMENTS.API_PORT}`,
-	);
+	new LoggerService()
+		.setContext("system")
+		.info(
+			`App start port ${EnvironmentsProvider.useValue.ENVIRONMENTS.API_PORT}`,
+		);
 
 	return app;
 }
