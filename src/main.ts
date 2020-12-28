@@ -4,7 +4,7 @@ import { NestExpressApplication } from "@nestjs/platform-express";
 import { EnvironmentsProvider } from "@internal/core/environment/environment.service";
 import { AppModule } from "./app.module";
 import * as path from "path";
-import moduleAlias = require("module-alias");
+import * as moduleAlias  from "module-alias"
 import { LoggerService } from "@internal/core/base-service/logger.service";
 
 moduleAlias.addAlias(

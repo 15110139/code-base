@@ -9,6 +9,7 @@ import { SqlModule } from "@internal/core/sql/sql.module";
 import { APP_GUARD, APP_INTERCEPTOR } from "@nestjs/core";
 import { JwtGuardPublic } from "@internal/core/auth/auth.guard";
 import { ResponseApiInterceptor } from "@internal/core/interceptor/response.interceptor";
+import { LoggerService } from "@internal/core/base-service/logger.service";
 
 @Module({
 	imports: [
@@ -18,7 +19,7 @@ import { ResponseApiInterceptor } from "@internal/core/interceptor/response.inte
 		EnvironmentsModule,
 		UserAuthModule,
 		SqlModule,
-		typeormModule(),
+		typeormModule(new LoggerService()),
 	],
 	providers: [
 		{

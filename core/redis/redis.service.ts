@@ -1,8 +1,9 @@
-import { Inject, Injectable, Logger } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { RedisClient } from "redis";
+import { LoggerService } from "../base-service/logger.service";
 @Injectable()
 export class RedisService {
-	private logger = new Logger(RedisService.name);
+	private logger = new LoggerService().setContext(this.constructor.name)
 	constructor(
 		@Inject("REDIS_CONNECTION") private readonly redisClient: RedisClient,
 	) {}
