@@ -36,11 +36,7 @@ export class CreateHouseAndStreet extends BaseApplication {
 				_query: ListPostQuery;
 			};
 		},
-		metaData: {
-			traceId: string;
-		},
-	) {
-		
+	): Promise<any> {
 		this.logger.info(JSON.stringify(data, null, 0));
 		await this.sqlBase.startTransaction(identity);
 		const newStreet = new StreetEntity();
@@ -58,7 +54,6 @@ export class CreateHouseAndStreet extends BaseApplication {
 			throw new BadRequestException(SYSTEM_CODE.BAD_REQUEST);
 		}
 		const newHouse = new HouseEntity();
-
 		newHouse.name = "Tien's House";
 		newHouse.house_id = uuid.v4();
 		newHouse.street_id = street.street_id;
@@ -71,9 +66,6 @@ export class CreateHouseAndStreet extends BaseApplication {
 			{
 				houseId: house.house_id,
 			},
-			{
-				traceId: metaData.traceId,
-			},
 		);
 
 		await this.sqlBase.commitTransaction(identity);
@@ -82,7 +74,7 @@ export class CreateHouseAndStreet extends BaseApplication {
 		return null;
 	}
 
-	public async getPost(_postId: string) {
+	public async getPost(_postId: string): Promise<any> {
 		return {};
 	}
 

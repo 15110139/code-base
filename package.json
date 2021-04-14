@@ -34,6 +34,8 @@
     "build": "^0.1.4",
     "class-transformer": "^0.3.1",
     "class-validator": "^0.12.2",
+    "fetch-h2": "^2.5.1",
+    "i18next": "^20.1.0",
     "module-alias": "^2.2.2",
     "nestjs-typeorm-paginate": "^2.2.5",
     "passport": "^0.4.1",

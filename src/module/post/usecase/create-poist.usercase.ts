@@ -17,9 +17,6 @@ export class CreateUserCaseService extends BaseApplication {
 	public async execute(
 		identity: BaseFunction,
 		data: { houseId: string },
-		_metaData: {
-			traceId: string;
-		},
 	): Promise<PeopleEntity> {
 		await this.sqlBase.startTransaction(identity);
 		const newPeople = new PeopleEntity();

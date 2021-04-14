@@ -17,7 +17,6 @@ import {
 	SYSTEM_ROLE,
 } from "@internal/shared/business/role-permission";
 import { RootBaseFunction } from "@internal/core/base-function-info/base-function-info.model";
-import * as uuid from "uuid";
 import { HEADER } from "@internal/shared/constant/http.constant";
 @Controller()
 @UseGuards(AuthGuard())
@@ -37,20 +36,16 @@ export class PostController {
 		@Query() query: ListPostQuery,
 		@JWTContent(JWTPayload) _jwtPayload: JWTPayload,
 		@Headers(HEADER.TRACE_ID) traceId: string,
-	) {
-		return await this.createHouseAndStreet.execute(
-			new RootBaseFunction(),
-			{
+	): Promise<any> {
+		return await this.createHouseAndStreet
+			.initTraceId(traceId)
+			.execute(new RootBaseFunction(), {
 				_userType: TOKEN_TYPE.NORMAL,
 				_paging: {
 					page: query?.page || 1,
 					pageSize: query?.pageSize || 10,
 					_query: query,
 				},
-			},
-			{
-				traceId: traceId || uuid.v4(),
-			},
-		);
+			});
 	}
 }

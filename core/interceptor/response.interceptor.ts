@@ -6,25 +6,43 @@ import {
 	ExecutionContext,
 	CallHandler,
 	RequestTimeoutException,
+	HttpException,
 } from "@nestjs/common";
-import { Observable, throwError, TimeoutError } from "rxjs";
+import { Observable, of, throwError, TimeoutError } from "rxjs";
 import { catchError, map } from "rxjs/operators";
+import { I18NextProvider, LANGUE } from "../i18next/i18next.service";
 
 @Injectable()
 export class ResponseApiInterceptor<T>
 	implements NestInterceptor<T, ResponseApiInterface<T>> {
 	intercept(
-		_context: ExecutionContext,
+		context: ExecutionContext,
 		next: CallHandler,
 	): Observable<ResponseApiInterface<T>> {
+		const request:Request = context.switchToHttp().getRequest();
+		const language : LANGUE = request.headers.get('Accept language') as LANGUE | LANGUE.EN_US
 		return next.handle().pipe(
 			map(
 				data => ({ data, systemCode: SYSTEM_CODE.SUCCESS }),
-				catchError(err => {
+				catchError((err: HttpException | Error) => {
+					let httpCode = 500;
+					if (err instanceof HttpException) {
+						httpCode =
+							err && err.getStatus ? err.getStatus() : httpCode;
+					}
 					if (err instanceof TimeoutError) {
 						return throwError(new RequestTimeoutException());
 					}
-					return throwError(err);
+					let systemCode = SYSTEM_CODE.SORRY_SOMETHING_WENT_WRONG
+					if (httpCode === 400) {
+						systemCode = SYSTEM_CODE.BAD_REQUEST;
+					} else if (httpCode === 401) {
+						systemCode = SYSTEM_CODE.UNAUTHORIZED;
+					} else if (httpCode === 403) {
+						systemCode = SYSTEM_CODE.FORBIDDEN;
+					}
+					systemCode = err.message as SYSTEM_CODE
+					return of(I18NextProvider.useValue.translation(language,systemCode,undefined,err)
 				}),
 			),
 		);

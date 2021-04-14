@@ -1,6 +1,6 @@
 import { Injectable, Logger, ValueProvider } from "@nestjs/common";
 import { Expose, plainToClass, Type } from "class-transformer";
-import { IsNumber, IsString, validateSync } from "class-validator";
+import { IsBoolean, IsNumber, IsString, validateSync } from "class-validator";
 
 export enum ENVIRONMENTS {
 	DEVELOP,
@@ -13,32 +13,32 @@ export class Environments {
 	@Expose()
 	@Type(() => String)
 	@IsString()
-	public API_PREFIX: string = "/v1";
+	public API_PREFIX = "/v1";
 
 	@Expose()
 	@Type(() => Number)
 	@IsNumber()
-	public API_PORT: number = 3000;
+	public API_PORT = 3000;
 
 	@Expose()
 	@Type(() => Number)
 	@IsNumber()
-	public DB_PORT: number = 5432;
+	public DB_PORT = 5432;
 
 	@Expose()
 	@Type(() => String)
 	@IsString()
-	public DB_HOST: string = "localhost";
+	public DB_HOST = "localhost";
 
 	@Expose()
 	@Type(() => String)
 	@IsString()
-	public DB_NAME: string = "post_project";
+	public DB_NAME = "post_project";
 
 	@Expose()
 	@Type(() => String)
 	@IsString()
-	public DB_USER: string = "root";
+	public DB_USER = "root";
 
 	@Expose()
 	@Type(() => String)
@@ -53,7 +53,7 @@ export class Environments {
 	@Expose()
 	@Type(() => String)
 	@IsString()
-	public JWT_ISSUER: string = "tienbmdev97";
+	public JWT_ISSUER = "tienbmdev97";
 
 	@Expose()
 	@Type(() => Number)
@@ -68,47 +68,52 @@ export class Environments {
 	@Expose()
 	@Type(() => String)
 	@IsString()
-	public JWT_SECRET: string = "JWT_SECRET";
+	public JWT_SECRET = "JWT_SECRET";
 
 	@Expose()
 	@IsString()
 	@Type(() => String)
-	public MQ_HOST: string = "localhost";
+	public MQ_HOST = "localhost";
 
 	@Expose()
 	@IsString()
 	@Type(() => String)
-	public MQ_USER: string = "admin";
+	public MQ_USER = "admin";
 
 	@Expose()
 	@IsString()
 	@Type(() => String)
-	public MQ_PASSWORD: string = "admin";
+	public MQ_PASSWORD = "admin";
 
 	@Expose()
 	@IsNumber()
 	@Type(() => Number)
-	public MQ_PORT: number = 5672;
+	public MQ_PORT = 5672;
 
 	@Expose()
 	@Type(() => String)
 	@IsString()
-	public REDIS_HOST: string = "localhost";
+	public REDIS_HOST = "localhost";
 
 	@Expose()
 	@IsNumber()
 	@Type(() => Number)
-	public REDIS_PORT: number = 6379;
+	public REDIS_PORT = 6379;
 
 	@Expose()
 	@Type(() => String)
 	@IsString()
-	public REDIS_USER: string = "admin";
+	public REDIS_USER = "admin";
 
 	@Expose()
 	@IsString()
 	@Type(() => String)
-	public REDIS_PASSWORD: string = "admin";
+	public REDIS_PASSWORD = "admin";
+
+	@Expose()
+	@IsBoolean()
+	@Type(() => Boolean)
+	public DISPLAY_ERROR_DETAIL = false;
 }
 
 @Injectable()
