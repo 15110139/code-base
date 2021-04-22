@@ -3,10 +3,10 @@ import { Expose, plainToClass, Type } from "class-transformer";
 import { IsBoolean, IsNumber, IsString, validateSync } from "class-validator";
 
 export enum ENVIRONMENTS {
-	DEVELOP,
-	SIT,
-	UAT,
-	PRODUCT,
+	DEVELOP = "DEVELOP",
+	SIT = "SIT",
+	UAT = "UAT",
+	PRODUCT = "PRODUCT",
 }
 
 export class Environments {

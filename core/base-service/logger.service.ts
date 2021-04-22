@@ -24,32 +24,35 @@ export const pino = Pino({
 });
 export class LoggerService implements LoggerService {
 	private context!: string;
-	public setTraceId(id: string) {
-		this.setContext(this.context + " - " + id);
+	private traceId!: string;
+	public setTraceId(traceId: string): void {
+		this.traceId = traceId;
 	}
-	public setContext(text: string) {
+	public setContext(text: string): LoggerService {
 		this.context = text;
 		return this;
 	}
 
-	public debug(message: any): void {
-		pino.debug(this.context + ": " + message);
+	public debug(message: string): void {
+		pino.debug(this.traceId + ": " + this.context + ": " + message);
 	}
 
 	public info(message: any): void {
-		pino.info(this.context + ": " + message);
+		pino.info(this.traceId + ": " + this.context + ": " + message);
 	}
 
-	public error(message: any, trace?: string | undefined): void {
+	public error(message: string, trace?: string | undefined): void {
 		const stringTrace = trace ? " " + trace : "";
-		pino.error(this.context + ": " + message + stringTrace);
+		pino.error(
+			this.traceId + ": " + this.context + ": " + message + stringTrace,
+		);
 	}
 
 	public warn(message: any): void {
-		pino.warn(this.context + message);
+		pino.warn(this.traceId + ": " + this.context + message);
 	}
 
 	public log(message: any): void {
-		pino.info(this.context + ": " + message);
+		pino.info(this.traceId + ": " + this.context + ": " + message);
 	}
 }

@@ -9,11 +9,16 @@ export class DBLogger implements Logger {
 	constructor(public logger: LoggerService) {
 		logger.setContext(this.context);
 	}
-	logQuery(query: string, parameters?: any[], _queryRunner?: QueryRunner) {
+	public logQuery(
+		query: string,
+		parameters?: any[],
+		_queryRunner?: QueryRunner,
+	): any {
 		this.log("log", query);
 		parameters && this.log("log", parameters);
 	}
-	logQueryError(
+	
+	public logQueryError(
 		error: string | Error,
 		query: string,
 		parameters?: any[],
@@ -23,7 +28,7 @@ export class DBLogger implements Logger {
 		this.log("error", query);
 		parameters && this.log("error", parameters);
 	}
-	logQuerySlow(
+	public logQuerySlow(
 		time: number,
 		query: string,
 		parameters?: any[],
@@ -32,17 +37,17 @@ export class DBLogger implements Logger {
 		this.log("warn", time + " slow with query " + query);
 		parameters && this.log("warn", parameters);
 	}
-	logSchemaBuild(message: string, _queryRunner?: QueryRunner) {
+	public logSchemaBuild(message: string, _queryRunner?: QueryRunner) {
 		this.log("log", message);
 	}
-	logMigration(message: string, _queryRunner?: QueryRunner) {
+	public logMigration(message: string, _queryRunner?: QueryRunner) {
 		this.log("log", message);
 	}
-	log(
+	public log(
 		level: "warn" | "info" | "log" | "error",
 		message: any,
 		_queryRunner?: QueryRunner,
-	) {
+	): void {
 		if (level === "log") {
 			this.logger.log(message);
 		} else if (level === "info") {
