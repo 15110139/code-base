@@ -1,5 +1,5 @@
 import { BaseFunction } from "../base-function-info/base-function-info.model";
-import { SqlBase } from "../sql/sql.service";
+import { SqlService } from "../sql/sql.service";
 import { LoggerService } from "./logger.service";
 import { v4 } from "uuid";
 import Axios, { AxiosInstance } from "axios";
@@ -12,7 +12,7 @@ export abstract class BaseApplication extends BaseFunction {
 		identity: BaseFunction | null | undefined,
 		data: { [key: string]: any },
 	): Promise<any>;
-	protected sqlBase = SqlBase.getInstance();
+	protected sqlBase = SqlService.getInstance();
 	protected readonly logger = new LoggerService().setContext(
 		this.constructor.name,
 	);

@@ -1,5 +1,6 @@
 import { ResponseApiInterface } from "@internal/shared/api-interface/base-api-interface";
 import { SYSTEM_CODE } from "@internal/shared/business/system-code";
+import { HEADER } from "@internal/shared/constant/http.constant";
 import {
 	Injectable,
 	NestInterceptor,
@@ -16,15 +17,14 @@ import { I18NextProvider, LANGUE } from "../i18next/i18next.service";
 export class ResponseApiInterceptor<T>
 	implements NestInterceptor<T, ResponseApiInterface<T>> {
 	intercept(
-		_context: ExecutionContext,
+		context: ExecutionContext,
 		next: CallHandler,
 	): Observable<ResponseApiInterface<T>> {
-		// const request: Request = context.switchToHttp().getRequest();
+		const request = context.switchToHttp().getRequest();
 		console.log("request");
-		// const language: LANGUE = request.headers.get("Accept language") as
-		// 	| LANGUE
-		// 	| LANGUE.EN_US;
-		const language = LANGUE.EN_US;
+		const language: LANGUE = request.headers[HEADER.ACCEPT_LANGUAGE] as
+			| LANGUE
+			| LANGUE.EN_US;
 		return next.handle().pipe(
 			map(
 				data => ({ data, systemCode: SYSTEM_CODE.SUCCESS }),

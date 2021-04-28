@@ -6,11 +6,11 @@ import {
 } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { getConnection } from "typeorm";
-import { SqlBase } from "./sql.service";
+import { SqlService } from "./sql.service";
 
 @Module({
 	imports: [TypeOrmModule.forFeature([])],
-	providers: [SqlBase],
+	providers: [SqlService],
 })
 export class SqlModule implements OnApplicationShutdown, OnModuleInit {
 	private logger = new Logger(SqlModule.name);

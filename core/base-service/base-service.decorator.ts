@@ -1,5 +1,5 @@
 import { BaseFunction } from "../base-function-info/base-function-info.model";
-import { SqlBase } from "../sql/sql.service";
+import { SqlService } from "../sql/sql.service";
 
 export function HandlerFunction() {
 	// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -15,7 +15,7 @@ export function HandlerFunction() {
 				const result = await originalMethod.apply(this, args);
 				return result;
 			} catch (error) {
-				await SqlBase.getInstance().rollbackTransaction(identity);
+				await SqlService.getInstance().rollbackTransaction(identity);
 				throw error;
 			}
 		};

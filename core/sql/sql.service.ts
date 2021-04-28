@@ -6,37 +6,46 @@ import {
 	Logger,
 	ValueProvider,
 } from "@nestjs/common";
-import { EntityManager, getConnection, QueryRunner } from "typeorm";
+import { getConnection } from "typeorm";
 import {
 	BaseFunction,
 	RootBaseFunction,
 } from "../base-function-info/base-function-info.model";
-import { QueryBase, TransactionCommit, TransactionStart } from "./sql.model";
+import {
+	QueryBase,
+	TransactionCommit,
+	TransactionData,
+	TransactionMap,
+	TransactionStart,
+} from "../base-service/base-sql";
 
-type TransactionMap = Map<BaseFunction, TransactionData>;
-
-type TransactionData = {
-	count: number;
-	callBlackReleaseLock: Array<() => Promise<void>>;
-	queryRunner: QueryRunner;
-	managerTransaction: EntityManager;
-};
+export abstract class SqlBase {
+	protected abstract startTransaction(f: BaseFunction): Promise<any>;
+	protected abstract commitTransaction(f: BaseFunction): Promise<any>;
+	protected abstract rollbackTransaction(f: BaseFunction): Promise<any>;
+	protected abstract executeQuery<T>(query: QueryBase<T>): Promise<any>;
+	protected abstract getTransaction(
+		key: BaseFunction,
+	): TransactionData | undefined;
+}
 
 @Injectable()
-export class SqlBase {
-	private logger = new Logger(SqlBase.name);
+export class SqlService extends SqlBase {
+	private logger = new Logger(SqlService.name);
 	private transactionMap: TransactionMap = new Map();
-	protected static instanceSqlBase: SqlBase;
+	protected static instanceSqlBase: SqlService;
 	public static getInstance() {
-		if (SqlBase.instanceSqlBase) {
-			return SqlBase.instanceSqlBase;
+		if (SqlService.instanceSqlBase) {
+			return SqlService.instanceSqlBase;
 		}
-		SqlBase.instanceSqlBase = new SqlBase();
-		return SqlBase.instanceSqlBase;
+		SqlService.instanceSqlBase = new SqlService();
+		return SqlService.instanceSqlBase;
 	}
 	public async startTransaction(f: BaseFunction): Promise<void> {
-		const startTransaction = new TransactionStart(f)
-		const transactionIdentity = this.getTransactionIdentity(startTransaction);
+		const startTransaction = new TransactionStart(f);
+		const transactionIdentity = this.getTransactionIdentity(
+			startTransaction,
+		);
 		this.logger.log(`Start transaction: ${startTransaction.selfEventId}`);
 		const transaction = this.transactionMap.get(transactionIdentity);
 		if (transaction) {
@@ -81,9 +90,11 @@ export class SqlBase {
 		return;
 	}
 	public async commitTransaction(f: BaseFunction) {
-		const transactionCommit = new TransactionCommit(f)
+		const transactionCommit = new TransactionCommit(f);
 		this.logger.log(`Commit transaction: ${transactionCommit.selfEventId}`);
-		const transactionIdentity = this.getTransactionIdentity(transactionCommit);
+		const transactionIdentity = this.getTransactionIdentity(
+			transactionCommit,
+		);
 		const transaction = this.transactionMap.get(transactionIdentity);
 		if (!transaction) {
 			this.logger.error(
@@ -166,7 +177,7 @@ export class SqlBase {
 	}
 }
 
-export const SqlBaseProvider: ValueProvider<SqlBase> = {
-	provide: SqlBase,
-	useValue: new SqlBase(),
+export const SqlBaseProvider: ValueProvider<SqlService> = {
+	provide: SqlService,
+	useValue: new SqlService(),
 };

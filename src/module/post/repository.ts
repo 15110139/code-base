@@ -1,5 +1,5 @@
 import { BaseFunction } from "@internal/core/base-function-info/base-function-info.model";
-import { QueryBase } from "@internal/core/sql/sql.model";
+import { QueryBase } from "@internal/core/base-service/base-sql";
 import { HouseEntity } from "@internal/database/entities/house.entity";
 import { PeopleEntity } from "@internal/database/entities/people.entity";
 import { StreetEntity } from "@internal/database/entities/street.entity";

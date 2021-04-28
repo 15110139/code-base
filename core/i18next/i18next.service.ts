@@ -57,7 +57,9 @@ export class I18NextService implements OnApplicationBootstrap {
 		const response: ResponseApiInterface<any> = {
 			systemCode,
 			data,
-			message: this.i18next.t(systemCode, lang),
+			message: this.i18next.t(systemCode, {
+				lng:lang,
+			}),
 		};
 		if (
 			systemCode !== SYSTEM_CODE.SUCCESS &&
